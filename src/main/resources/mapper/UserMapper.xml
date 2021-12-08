@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.project.ayqcby.mapper.UserMapper">
+    <insert id="addUser" parameterType="com.project.ayqcby.domain.User">
+        insert into xt_yhb (yhm, xm, kl, jsdm) values (#{yhm},#{xm},#{kl},#{jsdm})
+    </insert>
+    <update id="modifypassword" parameterType="com.project.ayqcby.domain.User">
+        update xt_yhb t set t.kl=#{kl} where t.yhm=#{yhm}
+    </update>
+    <update id="editUser" parameterType="com.project.ayqcby.domain.User">
+        update xt_yhb t set t.xm=#{xm},t.jsdm=#{jsdm} where t.yhm=#{yhm}
+    </update>
+    <delete id="delUser" parameterType="java.lang.String">
+        delete from xt_yhb where yhm=#{yhm}
+    </delete>
+
+    <sql id="wherecondition">
+        <where>
+            <if test="yhm != null and yhm != ''"> and (t.yhm=#{yhm} or t.xm like concat('%',#{yhm},'%'))</if>
+            <if test="xm != null and xm != ''"> and t.xm like concat('%',#{xm},'%')</if>
+            <if test="kl != null and kl != ''"> and t.kl=#{kl}</if>
+            <if test="jsdm != null and jsdm != ''"> and t.jsdm=#{jsdm}</if>
+        </where>
+    </sql>
+
+    <select id="queryUser" parameterType="com.project.ayqcby.domain.User" resultType="com.project.ayqcby.domain.User">
+        select t.yhm,t.xm,t.jsdm from xt_yhb t
+        <include refid="wherecondition"></include>
+    </select>
+    <select id="loadJs" resultType="com.project.ayqcby.domain.User">
+        select '' yhm,'请选择' xm from dual union all select jsdm yhm,jsmc xm from xt_jsdmb
+    </select>
+</mapper>

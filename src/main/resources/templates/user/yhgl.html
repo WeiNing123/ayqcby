@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>阿玉汽车保养</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <link rel="stylesheet" th:href="@{/layui/layuiadmin/layui/css/layui.css}" media="all">
+  <link rel="stylesheet" th:href="@{/layui/layuiadmin/style/admin.css}" media="all">
+  <link rel="stylesheet" th:href="@{/layui/layuiadmin/style/login.css}" media="all">
+</head>
+<body>
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header layui-form" style="padding: 10px 0px;">
+          <div class="layui-form-item">
+            <div class="layui-inline">
+              <label class="layui-form-label">角色</label>
+              <div class="layui-input-inline">
+                <select id="js_js"><option value="">请选择</option></select>
+              </div>
+            </div>
+            <div class="layui-inline">
+              <label class="layui-form-label">用户名/姓名</label>
+              <div class="layui-input-inline">
+                <input type="text" id="test-table-demoReload" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-inline yhgl-table-height-btn">
+              <div class="layui-btn layui-btn-sm" data-type="reload">检索</div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-card-body">
+          <div class="yhgl-table-height-btn" style="margin-bottom: 10px;">
+            <button class="layui-btn layui-btn-sm" data-type="addUser"><i class="layui-icon">&#xe654;</i>添加</button>
+          </div>
+          <table class="layui-hide" id="yhgl-table-height" lay-filter="yhgl-table-height"></table>
+          <script type="text/html" id="yhgl-table-height-barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i>编辑</a>
+            <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="initPassword"><i class="layui-icon">&#xe600;</i>密码初始化</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="remove"><i class="layui-icon">&#xe640;</i>删除</a>
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 模态窗口 -->
+<div id="add-user" class="layui-card-body layui-hide" style="padding: 15px;">
+  <form class="layui-form">
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+          <input type="text" id="add-user-yhm" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+          <input type="text" id="add-user-xm" placeholder="必填" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-inline">
+          <input type="number" id="add-user-dh" placeholder="必填" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">用户角色</label>
+        <div class="layui-input-inline">
+          <select id="add-user-js">
+            <option value="">请选择</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div id="edit-user" class="layui-card-body layui-hide" style="padding: 15px;">
+  <form class="layui-form">
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">用户名</label>
+        <div class="layui-input-inline">
+          <input type="text" id="edit-user-yhm" readonly class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">姓名</label>
+        <div class="layui-input-inline">
+          <input type="text" id="edit-user-xm" placeholder="必填" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">联系电话</label>
+        <div class="layui-input-inline">
+          <input type="number" id="edit-user-dh" placeholder="必填" class="layui-input">
+        </div>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-inline">
+        <label class="layui-form-label">用户角色</label>
+        <div class="layui-input-inline">
+          <select id="edit-user-js">
+            <option value="">请选择</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script th:src="@{/layui/layuiadmin/layui/layui.js}"></script>
+<script th:inline="javascript">
+    var ctx = [[@{/}]];
+
+    layui.config({
+        base: ctx + 'layui/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'form'], function(){
+        var admin = layui.admin,
+            table = layui.table,
+            form = layui.form,
+            $ = layui.$;
+
+        table.render({
+            elem: '#yhgl-table-height',
+            url: ctx + 'user/list',
+            height: 'full-156',
+            cellMinWidth: 80,
+            page: true,
+            limit: 2,
+            limits: [2, 4, 6, 8, 10],
+            cols: [
+                [
+                //{type:'checkbox', fixed: 'left'},
+                {field:'yhm', title: '用户名', width: 150},
+                {field:'xm', title: '姓名'},
+                {field:'lxdh', title: '联系电话', width: 150},
+                {field:'jsdm', title: '用户角色', width: 150,
+                    templet: function(d){
+                        if (d.jsdm == '01') {
+                            return "管理员";
+                        }else{
+                            return "商家";
+                        }
+                    }
+                },
+                {align:'center', fixed: 'right', toolbar: '#yhgl-table-height-barDemo'}
+            ]
+            ]
+        });
+
+        $('#js_js').empty();
+        $.post(ctx + 'user/role',function(data){
+            for(var i=0;i<data.length;i++){
+                $('#js_js').append("<option value='"+data[i].yhm+"'>"+data[i].xm+"</option>");
+            }
+            form.render('select');
+        },'json');
+
+        //监听表格复选框选择
+        table.on('checkbox(yhgl-table-height)', function(obj){
+            //console.log(obj);
+        });
+        //监听工具条
+        table.on('tool(yhgl-table-height)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'edit'){
+                $('#edit-user-yhm').val(data.yhm);
+                $('#edit-user-xm').val(data.xm);
+                $('#edit-user-dh').val(data.lxdh);
+
+                $('#edit-user-js').empty();
+                $.post(ctx + 'user/role',function(js){
+                    for(var i=0; i<js.length; i++){
+                        if(data.jsdm == js[i].yhm){
+                            $('#edit-user-js').append("<option value='"+js[i].yhm+"' selected>"+js[i].xm+"</option>");
+                        }else{
+                            $('#edit-user-js').append("<option value='"+js[i].yhm+"'>"+js[i].xm+"</option>");
+                        }
+                    }
+                    form.render('select');
+                },'json');
+
+                $('#edit-user').removeClass('layui-hide');
+                layer.open({
+                    title:'编辑用户',
+                    type: 1,
+                    area: admin.screen() < 2 ? ['80%', '300px'] : ['500px', '500px'],
+                    content: $('#edit-user'),
+                    btn: ['确定'],
+                    yes: function(index, layero){
+                        var yhm = $('#edit-user-yhm').val();
+                        var xm = $('#edit-user-xm').val();
+                        if(xm == ''){
+                            layer.alert('姓名必填！', {icon: 2});
+                            return;
+                        }
+                        var dh = $('#edit-user-dh').val();
+                        if(dh == ''){
+                            layer.alert('联系电话必填！', {icon: 2});
+                            return;
+                        }
+                        var js = $('#edit-user-js option:selected').val();
+                        if(js == ''){
+                            layer.alert('用户角色必选！', {icon: 2});
+                            return;
+                        }
+                        $.post(ctx + 'user/editUser',{yhm: yhm, xm: xm, jsdm: js, lxdh: dh},function(js){
+                            reloadDatagrid();
+                            $('#edit-user').addClass('layui-hide');
+                            layer.closeAll('page');
+                            layer.msg('操作成功！', {icon: 6});
+                        },'json');
+                    },cancel: function(){
+                        $('#edit-user').addClass('layui-hide');
+                    }
+                });
+            }else if(obj.event === 'initPassword'){
+                layer.confirm('您确定要给该用户初始化密码吗？', {icon: 3, title:'提示'}, function(index){
+                    $.post(ctx + 'user/initPassword',{yhm: data.yhm},function(js){
+                        layer.alert(js.msg, {icon: 6});
+                        layer.close(index);
+                    },'json');
+                });
+            }else if(obj.event === 'remove'){
+                layer.confirm('您确定要删除该用户吗？', {icon: 3, title:'提示'}, function(index){
+                    $.post(ctx + 'user/delUser',{yhm: data.yhm},function(js){
+                        layer.alert('删除成功！', {icon: 6});
+                        reloadDatagrid();
+                        layer.close(index);
+                    },'json');
+                });
+            }
+        });
+
+        var active = {
+            reload: function(){
+                reloadDatagrid();
+            },
+            addUser: function(){
+                $('#add-user-js').empty();
+                $.post(ctx + 'user/role',function(data){
+                    for(var i=0;i<data.length;i++){
+                        $('#add-user-js').append("<option value='"+data[i].yhm+"'>"+data[i].xm+"</option>");
+                    }
+                    form.render('select');
+                },'json');
+
+                $('#add-user').removeClass('layui-hide');
+                layer.open({
+                    title:'添加用户',
+                    type: 1,
+                    area: admin.screen() < 2 ? ['80%', '300px'] : ['500px', '500px'],
+                    content: $('#add-user'),
+                    btn: ['确定'],
+                    yes: function(index, layero){
+                        var yhm = $('#add-user-yhm').val();
+                        if(yhm == ''){
+                            layer.alert('用户名必填！', {icon: 2});
+                            return;
+                        }
+                        var xm = $('#add-user-xm').val();
+                        if(xm == ''){
+                            layer.alert('姓名必填！', {icon: 2});
+                            return;
+                        }
+                        var dh = $('#add-user-dh').val();
+                        if(dh == ''){
+                            layer.alert('联系电话必填！', {icon: 2});
+                            return;
+                        }
+                        var js = $('#add-user-js option:selected').val();
+                        if(js == ''){
+                            layer.alert('用户角色必选！', {icon: 2});
+                            return;
+                        }
+                        $.post(ctx + 'user/addUser',{yhm: yhm, xm: xm, jsdm: js, lxdh: dh},function(js){
+                            reloadDatagrid();
+                            $('#add-user').addClass('layui-hide');
+                            layer.closeAll('page');
+                            layer.msg('添加成功！用户初始密码为123456', {icon: 6});
+                        },'json');
+                    },cancel: function(){
+                        $('#add-user').addClass('layui-hide');
+                    }
+                });
+            }
+        };
+
+        $('.yhgl-table-height-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //执行重载
+        function reloadDatagrid(){
+            table.reload('yhgl-table-height', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                },
+                where: {
+                    yhm: $('#test-table-demoReload').val(),
+                    jsdm: $('#js_js option:selected').val()
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
